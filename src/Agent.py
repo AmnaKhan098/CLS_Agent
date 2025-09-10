@@ -24,6 +24,6 @@ model = init_chat_model("gpt-4o-mini",
 agent = create_react_agent(
     model=model,
     tools=[run_command,get_directory_structure,create_directory,create_file,create_file,delete_file,edit_file,rename_file],
-    prompt="whenever you need to call a tool always call run_command tool first to get current directory then call others tool as required",
+    prompt=" you need to first call run_command tool to get current directory then call others tool as required and call get_directory_structure to get structure",
     checkpointer=checkpointer 
 )
