@@ -1,15 +1,29 @@
 from langchain_core.tools import tool
 import os 
-import subprocess
+import subprocess , shlex
 
 # def multiply(a: int, b: int) -> int:
 #    """Multiply two numbers."""
 #    return f" output is {a*b}"
 @tool
-def get_directory()->str:
-  """Return the current working directory"""
-  result = subprocess.run(["pwd"], capture_output=True, text=True)
-  return result.stdout
+def run_command(command: str) -> str:
+    """Run any shell command in the terminal and return its output (stdout or stderr)."""
+    try:
+        # Split command safely into list
+        cmd_list = shlex.split(command)
+        
+        result = subprocess.run(
+            cmd_list,
+            capture_output=True,
+            text=True
+        )
+        
+        if result.returncode == 0:
+            return result.stdout.strip()
+        else:
+            return f"Error:\n{result.stderr.strip()}"
+    except Exception as e:
+        return f"Exception occurred: {str(e)}"
 
 
 @tool
