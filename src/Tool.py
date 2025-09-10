@@ -27,23 +27,26 @@ def run_command(command: str) -> str:
 
 
 @tool
-def get_directory_structure() -> str:
-     """Return a nicely formatted directory structure."""
-     path="CLS_Agent"
-     if not os.path.exists(path):
+def get_directory_structure(path: str = ".") -> str:
+    """
+    Return a tree-like directory structure starting at `path` (default = current working directory).
+    Example: get_directory_structure() or get_directory_structure('C:/Users/HP/Desktop/CLS_Agent')
+    """
+  
+    if not os.path.exists(path):
         return f"Error: The path '{path}' does not exist."
-     if not os.path.isdir(path):
+    if not os.path.isdir(path):
         return f"Error: The path '{path}' is not a directory."
 
-     structure = []
-     for root, dirs, files in os.walk(path):
+    structure = []
+    for root, dirs, files in os.walk(path):
         level = root.replace(path, '').count(os.sep)
         indent = '│   ' * level + '├── '
         structure.append(f"{indent}{os.path.basename(root)}/")
         subindent = '│   ' * (level + 1) + '├── '
         for file in files:
             structure.append(f"{subindent}{file}")
-     return "\n".join(structure)
+    return "\n".join(structure)
 
 
 @tool
