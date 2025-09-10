@@ -1,9 +1,17 @@
 from langchain_core.tools import tool
-import os
+import os 
+import subprocess
 
 # def multiply(a: int, b: int) -> int:
 #    """Multiply two numbers."""
 #    return f" output is {a*b}"
+@tool
+def get_directory()->str:
+  """Return the current working directory"""
+  result = subprocess.run(["pwd"], capture_output=True, text=True)
+  return result.stdout
+
+
 @tool
 def get_directory_structure() -> str:
      """Return a nicely formatted directory structure."""
@@ -47,3 +55,30 @@ def create_file(path: str) -> str:
         return f"File '{path}' created successfully."
     except OSError as e:
         return f"Error creating file: {e}"
+@tool
+def delete_file(path:str)->str:
+  """Delete a file."""
+  try:
+    os.remove(path)
+    return f"File '{path}' deleted successfully."
+  except OSError as e:
+    return f"Error deleting file: {e}"
+
+@tool
+def edit_file(path:str, content:str)->str:
+  """Edit a file."""
+  try:
+    with open(path,"w") as f:
+      f.write(content)
+    return f"File {path} edited sucessfully"
+  except OSError as e:
+     return f"Error editing file: {e}"
+
+@tool
+def rename_file(path:str, new_name:str)->str:
+  """Rename a file."""
+  try:
+    os.rename(path, new_name)
+    return f"File {path} renamed to {new_name} successfully"
+  except OSError as e:
+    return f"Error renaming file: {e}"
